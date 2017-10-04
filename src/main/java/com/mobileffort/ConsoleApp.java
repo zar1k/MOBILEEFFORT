@@ -17,10 +17,10 @@ public class ConsoleApp {
         AppLogic logic = null;
 
         for (; ; ) {
-            String first = reader.next();
-            String second = reader.next();
+            String inputFile = reader.next();
+            String outputFile = reader.next();
             try {
-                logic = new AppLogic(first, second);
+                logic = new AppLogic(inputFile, outputFile);
                 break;
             } catch (LogicException e) {
                 System.out.println("The file doesn't exist. Please enter again.");

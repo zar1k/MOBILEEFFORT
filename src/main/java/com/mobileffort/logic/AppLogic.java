@@ -42,9 +42,11 @@ public class AppLogic {
     }
 
     /**
-     * @param file
-     * @return
-     * @throws LogicException
+     * This method checks for the existence of the file which is input to.
+     *
+     * @param file which is input to.
+     * @return true if the file exists, otherwise false.
+     * @throws LogicException if the file does not exist.
      */
     private boolean verifyFile(String file) throws LogicException {
         if (Files.exists(Paths.get(file))) {
@@ -63,12 +65,10 @@ public class AppLogic {
             return;
         }
         for (String currentPath : parser.parseInputFile(this.path)) {
-            try {
-                verifyFile(currentPath);
-            } catch (LogicException e) {
-                System.out.println("");
+            if (Files.exists(Paths.get(currentPath))) {
+                threads.add(new Thread(new CounterFiles(sequentialNumber, currentPath)));
             }
-            threads.add(new Thread(new CounterFiles(sequentialNumber, currentPath)));
+            continue;
         }
         for (Thread thread : threads) {
             thread.start();
