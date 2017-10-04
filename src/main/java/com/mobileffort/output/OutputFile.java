@@ -22,7 +22,7 @@ public class OutputFile implements IOutputFile {
             writer.write(sb.toString());
             writer.flush();
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("Having problems when saving the file.");
         }
     }
 }

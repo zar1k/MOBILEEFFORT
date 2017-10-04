@@ -1,17 +1,18 @@
 package com.mobileffort.tools;
 
-import com.mobileffort.logic.AppLogic;
 import com.mobileffort.output.Display;
 import com.mobileffort.output.IDisplay;
 import com.mobileffort.output.IOutputFile;
 import com.mobileffort.output.OutputFile;
 
-import java.io.File;
+import java.io.IOException;
+import java.nio.file.*;
+import java.nio.file.attribute.BasicFileAttributes;
 
 /**
  * This class contains a method to count files in a directory and subdirectory.
  */
-public class CounterFiles implements Runnable {
+public class CounterFiles extends SimpleFileVisitor<Path> implements Runnable {
     private IDisplay display = new Display();
     private IOutputFile outputFile = new OutputFile();
     // Sequential record number.
@@ -40,31 +41,18 @@ public class CounterFiles implements Runnable {
 
     @Override
     public void run() {
-        counterFiles(path);
-        display.show(this);
+        try {
+            Files.walkFileTree(Paths.get(path), this);
+        } catch (IOException e) {
+            System.out.println("If an I/O error is thrown by a visitor method.");
+        }
         outputFile.save(this);
+        display.show(this);
     }
 
-    /**
-     * Counts the files of the directory and its subdirectories.
-     *
-     * @param path The path to the directory in which you want to search.
-     * @return Number of files found when crawling the directory and nested subdirectories of directories.
-     */
-    private int counterFiles(final String path) {
-        File file = new File(path);
-        File[] files = file.listFiles();
-        for (File currentFile : files) {
-            if (AppLogic.isInterrupt() == true) {
-                break;
-            }
-            if (currentFile.isDirectory()) {
-                counterFiles(currentFile.getPath());
-            }
-            if (currentFile.isFile()) {
-                numberFilesFound++;
-            }
-        }
-        return numberFilesFound;
+    @Override
+    public FileVisitResult visitFile(Path path, BasicFileAttributes fileAttributes) {
+        numberFilesFound++;
+        return FileVisitResult.CONTINUE;
     }
 }

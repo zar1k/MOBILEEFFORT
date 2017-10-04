@@ -1,8 +1,11 @@
 package com.mobileffort.logic;
 
+import com.mobileffort.exception.LogicException;
 import com.mobileffort.tools.CounterFiles;
 import com.mobileffort.tools.Parser;
 
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,7 +21,8 @@ public class AppLogic {
     private List<Thread> threads;
 
 
-    public AppLogic(final String path, final String outputFile) {
+    public AppLogic(final String path, final String outputFile) throws LogicException {
+        verifyFile(path);
         AppLogic.outputFile = outputFile;
         this.path = path;
         this.parser = new Parser();
@@ -38,6 +42,18 @@ public class AppLogic {
     }
 
     /**
+     * @param file
+     * @return
+     * @throws LogicException
+     */
+    private boolean verifyFile(String file) throws LogicException {
+        if (Files.exists(Paths.get(file))) {
+            return true;
+        }
+        throw new LogicException("The specified file does not exist.");
+    }
+
+    /**
      * The method creates and starts threads for each directory in which you want to count the files.
      */
     public void parallelComputing() {
@@ -47,7 +63,11 @@ public class AppLogic {
             return;
         }
         for (String currentPath : parser.parseInputFile(this.path)) {
-            sequentialNumber++;
+            try {
+                verifyFile(currentPath);
+            } catch (LogicException e) {
+                System.out.println("");
+            }
             threads.add(new Thread(new CounterFiles(sequentialNumber, currentPath)));
         }
         for (Thread thread : threads) {

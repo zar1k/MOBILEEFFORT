@@ -7,6 +7,7 @@
     <groupId>com.gmail.andreyzarazka</groupId>
     <artifactId>mobileffort-test-task</artifactId>
     <version>1.0-SNAPSHOT</version>
+    <packaging>jar</packaging>
 
     <repositories>
         <repository>

@@ -25,7 +25,7 @@ public class Parser {
             //br returns as stream and convert it into a List
             paths = br.lines().collect(Collectors.toList());
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("Having problems reading from a file.");
         }
         return paths;
     }
