@@ -23,6 +23,5 @@
  * момент.
  *
  * @author <a href="mailto:andreyzarazka@gmail.com">Andrew Zarazka</a>
- * @since 18.07.2016
  */
 package com.mobileffort;
